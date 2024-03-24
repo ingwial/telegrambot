@@ -1,8 +1,8 @@
 package alvarez.wilfredo.telegrambot.service;
 
+import alvarez.wilfredo.telegrambot.configuration.DefaultContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -11,12 +11,13 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 @Service
 public class TelegramBot extends TelegramLongPollingBot {
-    @Value("${app.bot.username}")
-    private String botUsername;
-    @Value("${app.bot.token}")
-    private String botToken;
+    private final DefaultContext context;
 
-    Logger log = LoggerFactory.getLogger(TelegramBot.class);
+    private final Logger log = LoggerFactory.getLogger(TelegramBot.class);
+
+    public TelegramBot(DefaultContext context) {
+        this.context = context;
+    }
 
     @Override
     public void onUpdateReceived(Update update) {
@@ -44,11 +45,11 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Override
     public String getBotUsername() {
-        return this.botUsername;
+        return this.context.getBotUsername();
     }
 
     @Override
     public String getBotToken() {
-        return this.botToken;
+        return this.context.getBotToken();
     }
 }
